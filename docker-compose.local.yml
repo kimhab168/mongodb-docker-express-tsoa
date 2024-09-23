@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+  backend_sample:
+    container_name: backend_sample_container #docker compose's container name
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    restart: always
+    ports:
+      - 3000:3000
+    env_file: ./src/configs/.env.development
+    environment:
+      - DOCKER_ENV=true
+    volumes:
+      - ./src:/app/src # HOT RELOADING, ANY CHANGE IN SRC FOLDER OUR APP WILL RESTART
+    depend on: -mongodb
+  mongo:
+    image: mongo:latest
+    container_name: mongo_container
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: habhab
+      MONGO_INITDB_ROOT_PASSWORD: habhab
+      MONGO_INITDB_DATABASE: habDB
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
